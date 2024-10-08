@@ -39,7 +39,7 @@ function App() {
     setDate('');
 
     // Afficher un message de succès
-    setMessage('Message ajouté avec succès')
+    setMessage('Tâche ajouté avec succès')
     setTimeout(() => {
       setMessage('');
     }, 3000);
@@ -48,10 +48,11 @@ function App() {
 
   return (
     <>
-      <h1 className="text-blue-400 flex justify-center text-4xl font-bold underline decoration-wavy animate-spin cursor-cell">Cahier de texte</h1>
-      <form className="flex flex-col space-y-2 max-w-80 border p-6 shadow-lg mx-auto mt-12 rounded-sm animate-bounce" onSubmit={handleSubmit}>
+      <h1 className="text-blue-400 flex justify-center text-4xl font-bold underline decoration-wavy cursor-cell mx-auto">Cahier de texte</h1>
+      <form className="flex flex-col space-y-2 max-w-80 border p-6 shadow-lg mx-auto mt-12 rounded-sm" onSubmit={handleSubmit}>
         <input
             type="text"
+            data-cy="title-task-input"
             className="border p-2"
             placeholder="Titre de la tâche"
             onChange={(e) => setTitle(e.target.value)}
@@ -59,11 +60,15 @@ function App() {
         />
         <input
             type="date"
-            className="border p-2"
+            data-cy="date-task-input"
+            className="border p-"
             onChange={(e) => setDate(e.target.value)}
             value={date}
         />
-        <button type="submit" className="cursor-crosshair">
+        <button
+            type="submit"
+            data-cy="submit-task-button"
+            className="cursor-crosshair border-2 bg-blue-400 mx-lg rounded-md">
           Valider
         </button>
       </form>
@@ -71,7 +76,7 @@ function App() {
           <div className="text-blue-400 p-2 text-center mt-2">{message}</div>
       )}
       <pre>
-        <code className="animate-pulse">
+        <code>
           {JSON.stringify(
               {
                 title,
