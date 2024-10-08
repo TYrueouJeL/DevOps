@@ -42,8 +42,4 @@ describe('Tasks test', () => {
       expect(ls[Cypress.config().baseUrl]).to.be.undefined;
     })
   })
-
-  it('Crashed test', () => {
-    expect(true).to.equal(false)
-  })
 })

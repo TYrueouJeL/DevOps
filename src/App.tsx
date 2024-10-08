@@ -48,8 +48,8 @@ function App() {
 
   return (
     <>
-      <h1 className="text-blue-400 flex justify-center text-4xl font-bold underline decoration-wavy cursor-cell mx-auto">Cahier de texte</h1>
-      <form className="flex flex-col space-y-2 max-w-80 border p-6 shadow-lg mx-auto mt-12 rounded-sm" onSubmit={handleSubmit}>
+      <h1 className="text-blue-400 flex justify-center text-4xl font-bold underline decoration-wavy cursor-cell mx-auto animate-spin">Cahier de texte</h1>
+      <form className="flex flex-col space-y-2 max-w-80 border p-6 shadow-lg mx-auto mt-12 rounded-sm animate-bounce" onSubmit={handleSubmit}>
         <input
             type="text"
             data-cy="title-task-input"
@@ -76,7 +76,7 @@ function App() {
           <div className="text-blue-400 p-2 text-center mt-2">{message}</div>
       )}
       <pre>
-        <code>
+        <code className="animate-pulse">
           {JSON.stringify(
               {
                 title,
