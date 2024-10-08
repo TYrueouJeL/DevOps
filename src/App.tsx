@@ -1,6 +1,13 @@
 import './App.css'
 import {useState} from "react";
 
+type Task = {
+  title: string;
+  date: string;
+};
+
+const TASKS_STORAGE_KEY = "tasks_db";
+
 function App() {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
@@ -19,7 +26,13 @@ function App() {
       return;
     }
 
-    // TODO enregistrer la tâche dans le local storage
+    // Enregistrer la tâche dans le local storage
+
+    const tasks: Task[] = JSON.parse(
+        localStorage.getItem(TASKS_STORAGE_KEY) || "[]"
+    );
+    tasks.push({ title, date });
+    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
 
     // Réinitialiser les champs
     setTitle('');
@@ -35,7 +48,7 @@ function App() {
 
   return (
     <>
-      <h1 className="text-blue-400 flex justify-center text-4xl font-bold underline animate-spin">Cahier de texte</h1>
+      <h1 className="text-blue-400 flex justify-center text-4xl font-bold underline decoration-wavy animate-spin cursor-cell">Cahier de texte</h1>
       <form className="flex flex-col space-y-2 max-w-80 border p-6 shadow-lg mx-auto mt-12 rounded-sm animate-bounce" onSubmit={handleSubmit}>
         <input
             type="text"
@@ -50,13 +63,13 @@ function App() {
             onChange={(e) => setDate(e.target.value)}
             value={date}
         />
-        <button type="submit">
+        <button type="submit" className="cursor-crosshair">
           Valider
         </button>
-        {message && (
-            <div className="text-blue-400 p-2 text-center mt-2">{message}</div>
-        )}
       </form>
+      {message && (
+          <div className="text-blue-400 p-2 text-center mt-2">{message}</div>
+      )}
       <pre>
         <code className="animate-pulse">
           {JSON.stringify(
