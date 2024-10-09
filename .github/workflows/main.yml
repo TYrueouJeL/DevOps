@@ -19,11 +19,10 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          build: pnpm build
-          start: pnpm preview
-          config: baseUrl=http://localhost:4173
+          build: npm run build
+          start: npm run dev
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./dist
           
