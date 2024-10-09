@@ -8,6 +8,14 @@ jobs:
   cypress-run:
     runs-on: ubuntu-22.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Set up npm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 9
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
