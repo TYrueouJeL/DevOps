@@ -1,5 +1,8 @@
 import './App.css'
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {Calendar, momentLocalizer} from 'react-big-calendar'
+import moment from 'moment'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 type Task = {
   title: string;
@@ -12,6 +15,22 @@ function App() {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [message, setMessage] = useState('');
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasksLoaded, setTasksLoaded] = useState(false);
+
+  useEffect(() => {
+    const localStorageTasks: Task[] = JSON.parse(
+        localStorage.getItem(TASKS_STORAGE_KEY) || "[]"
+    );
+    setTasks(localStorageTasks);
+    setTasksLoaded(true);
+  }, [])
+
+  useEffect(() => {
+    if (tasksLoaded) {
+      localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+    }
+  }, [tasks, tasksLoaded]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,11 +47,8 @@ function App() {
 
     // Enregistrer la tâche dans le local storage
 
-    const tasks: Task[] = JSON.parse(
-        localStorage.getItem(TASKS_STORAGE_KEY) || "[]"
-    );
-    tasks.push({ title, date });
-    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+    const newTask = { title, date };
+    setTasks((prevTasks) => [...prevTasks, newTask])
 
     // Réinitialiser les champs
     setTitle('');
@@ -46,10 +62,12 @@ function App() {
     return;
   }
 
+  const localizer = momentLocalizer(moment)
+
   return (
     <>
-      <h1 className="text-blue-400 flex justify-center text-4xl font-bold underline decoration-wavy cursor-cell mx-auto animate-spin">Cahier de texte</h1>
-      <form className="flex flex-col space-y-2 max-w-80 border p-6 shadow-lg mx-auto mt-12 rounded-sm animate-bounce" onSubmit={handleSubmit}>
+      <h1 className="text-blue-400 flex justify-center text-4xl font-bold underline decoration-wavy cursor-cell mx-auto animate-bounce">Cahier de texte</h1>
+      <form className="flex flex-col space-y-2 max-w-80 border p-6 shadow-lg mx-auto mt-12 rounded-sm" onSubmit={handleSubmit}>
         <input
             type="text"
             data-cy="title-task-input"
@@ -75,18 +93,33 @@ function App() {
       {message && (
           <div className="text-blue-400 p-2 text-center mt-2">{message}</div>
       )}
-      <pre>
-        <code className="animate-pulse">
-          {JSON.stringify(
-              {
-                title,
-                date,
-              },
-              null,
-              2
-          )}
-        </code>
-      </pre>
+
+      <Calendar
+          className="flex flex-col space-y-2 w-10/12 border p-6 shadow-lg mx-auto mt-12 rounded-sm"
+          localizer={localizer}
+          events={tasks.map((t) => ({
+            title: t.title,
+            start: t.date,
+            end: t.date,
+            allDay: true,
+          }))}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: 600 }}
+      />
+
+      {/*<pre>*/}
+      {/*  <code className="animate-pulse">*/}
+      {/*    {JSON.stringify(*/}
+      {/*        {*/}
+      {/*          title,*/}
+      {/*          date,*/}
+      {/*        },*/}
+      {/*        null,*/}
+      {/*        2*/}
+      {/*    )}*/}
+      {/*  </code>*/}
+      {/*</pre>*/}
     </>
   )
 }

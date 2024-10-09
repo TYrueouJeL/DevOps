@@ -1,6 +1,6 @@
 const taskToCreate = {
   title: "test",
-  date: "2018-02-01",
+  date: new Date().toISOString().split("T")[0],
 }
 
 describe('Tasks test', () => {
@@ -11,6 +11,7 @@ describe('Tasks test', () => {
     cy.get('input[data-cy=date-task-input]').type(taskToCreate.date)
     cy.get('button[data-cy=submit-task-button]').click()
     cy.contains('Tâche ajouté avec succès')
+    cy.get('.rbc-event-content[title="' + taskToCreate.title + '"]').should("exist")
 
     cy.getAllLocalStorage().then((ls) => {
       console.log(ls)
@@ -27,7 +28,7 @@ describe('Tasks test', () => {
     cy.contains('Veuillez remplir tous les champs !')
 
     cy.getAllLocalStorage().then((ls) => {
-      expect(ls[Cypress.config().baseUrl]).to.be.undefined;
+      expect(ls[Cypress.config().baseUrl] ['tasks_db']).to.be.equal("[]");
     })
   })
 
@@ -39,7 +40,14 @@ describe('Tasks test', () => {
     cy.contains('Veuillez remplir tous les champs !')
 
     cy.getAllLocalStorage().then((ls) => {
-      expect(ls[Cypress.config().baseUrl]).to.be.undefined;
+      expect(ls[Cypress.config().baseUrl] ['tasks_db']).to.be.equal("[]");
     })
+  })
+
+  it('Try a pre-completed calendar', () => {
+    cy.visit('http://localhost:5173')
+    localStorage.setItem('tasks_db', JSON.stringify([taskToCreate]));
+
+    cy.get('.rbc-event-content[title="' + taskToCreate.title + '"]').should("exist")
   })
 })
