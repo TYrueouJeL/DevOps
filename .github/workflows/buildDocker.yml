@@ -16,6 +16,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build App
+        run: npm run build
+
       - name: Docker Login
         uses: azure/docker-login@v1
         with:
