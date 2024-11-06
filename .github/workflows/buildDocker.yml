@@ -36,3 +36,25 @@ jobs:
           push: true
           tags: ${{ secrets.AZURE_URL }}/devops-app:${{ github.sha }}
           file: Dockerfile
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: 'Deploy to Azure Container Instances'
+        uses: 'azure/aci-deploy@v1'
+        with:
+          ressource-group: contoso
+          dns-name-label: url-for-container
+          image: contoso.azurecr.io/nodejssampleapp:${{ github.sha }}
+          cpu: 1
+          memory: 0.1
+          registry-username: ${{ secrets.REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+          name: contoso-container
+          location: 'west eu'
